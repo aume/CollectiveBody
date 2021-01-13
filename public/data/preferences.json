@@ -1,0 +1,74 @@
+{
+  "path":"vids/",
+
+  "vid_sizes":{
+    "small":{
+      "path":"44p/",
+      "width":80,
+      "height":44
+    },
+    "med":{
+      "path":"88p/",
+      "width":160,
+      "height":80
+    },
+    "large":{
+      "path":"176p/",
+      "width":320,
+      "height":176
+    },
+    "ultra":{
+      "path":"352p/",
+      "width":640,
+      "height":352
+    }
+  },
+  "belly":[
+    "belly dance.mp4",
+    "DSC_4524.mp4",
+    "DSC_4525.mp4",
+    "DSC_4527.mp4"
+  ],
+  "back":[
+    "back with maria sounds.mp4",
+    "lin snelling.mp4"
+  ],
+  "head":[
+    "response to Andrew percussion.mp4"
+  ],
+  "knee":[
+    "DSC_4591.mp4",
+    "DSC_4592.mp4",
+    "DSC_4593.mp4"
+  ],
+  "arm":[
+    "DSC_4594.mp4",
+    "DSC_4595.mp4"
+  ],
+  "arm_pit":[
+    "DSC_4596.mp4"
+  ],
+  "foot":[
+    "DSC_4596.mp4",
+    "DSC_4597.mp4"
+  ],
+  "neck":[
+    "DSC_4598.mp4",
+    "DSC_4599.mp4",
+    "DSC_4600.mp4",
+    "DSC_4601.mp4"
+  ],
+  "audio":[
+    "Andrew - music response to Neil back - 9_6_20, 10.41 AM.mp3",
+    "Andrew - music response to Neil dance.mp3",
+    "Andrew - music response to Neil hands - 9_6_20, 10.52 AM.mp3",
+    "Andrew Clarinet response to Sean finger mid.mp3",
+    "Andrew flute response to Sean finger close.mp3",
+    "Andrew harp response to Sean full body.mp3",
+    "eno and the organ.mp3",
+    "Maria-audio response to Sean dance.mp3",
+    "miles - lin snelling.mp3",
+    "Miles - music response to Nei dance II.mp3"
+  ]
+
+}

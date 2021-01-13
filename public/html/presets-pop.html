@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link href="../js/tabulator/css/tabulator.min.css" rel="stylesheet">
+    <script type="text/javascript" src="../js/tabulator/js/tabulator.min.js"></script>
+  </head>
+  <body>
+    <h2><code> Preset Pop</code></h2>
+    <form>
+    <input type="button" value="Save" onclick="save()">
+    <input type="button" value="+ New" onclick="newRow()">
+  </form>
+  <form>
+    <input type="button" value="Start sequencer" onclick="startSequencer()">
+    <input type="button" value="Stop sequencer" onclick="stopSequencer()">
+  </form>
+    <div id="example-table"></div>
+  </body>
+  <script>
+
+  let table = "";
+  let presets = [] ;
+  let sequencer;
+  let sArray =[];
+  let count = 0;
+  let run = false ;
+ function startSequencer() {
+   run = true ;
+   sequenceStep() ;
+ }
+
+ function stopSequencer() {
+   run = false ;
+ }
+
+ function sequenceStep() {
+   let sArray = table.getData(true);
+   let payload = sArray[count] ;
+   count = (count+1) % sArray.length ;
+   playPresetChannel.postMessage(payload);
+   if (! payload['interval']) {
+     interval = 2 ;
+   } else {
+     interval = payload['interval'] ;
+   }
+   console.log(interval);
+   if (run) setTimeout(sequenceStep, interval*1000);
+
+ }
+ /*********************
+ //
+ // Broadcast channels
+ //
+ *********************/
+
+ // channel gets current preset from screen
+  const bc = new BroadcastChannel('current_preset');
+  bc.onmessage = (eventMessage) => {
+   let data = JSON.parse(eventMessage.data);
+   let nPreset = {'name':"new preset", 'boxes':data, 'speed':'slow'};
+   presets.unshift(nPreset);
+   console.log(presets);
+  }
+
+  // direct main app to play this preset
+  const playPresetChannel = new BroadcastChannel('play_preset');
+  playPresetChannel.onmessage = (eventMessage) => {
+   // let data = JSON.parse(eventMessage.data);
+   // presets.unshift(data);
+   // console.log(presets);
+  }
+
+
+
+  function newRow() {
+    bc.postMessage('update_title');
+  }
+
+  // table view from JSON
+  function buildTable() {
+    table = new Tabulator("#example-table", {
+      data:presets,
+      height:"640px",
+      movableRows:true,
+      addRowPos:"top",
+      tooltips:true,
+      reactiveData:true,
+      columns:[
+        {title:"Name", field:"name", editor:"input"},
+        {title:"Interval", field:"interval", editor:"input"},
+        {formatter:"buttonCross", align:"center", title:"del", headerSort:false,
+         cellClick:function(e, cell) {
+  	        if(confirm('Are you sure you want to delete this entry?')) cell.getRow().delete();
+  	       }
+         },
+         {formatter:"", align:"center", title:"play", headerSort:false,
+          cellClick:function(e, cell) {
+   	        let payload = cell.getRow().getData();
+            playPresetChannel.postMessage(payload);
+   	       }
+          }
+      ],
+      rowMoved:function(row){
+          var array = table.getData('active');
+          console.log(array);
+      },
+
+    });
+  }
+
+  // fetch presets from the server
+  window.onload = function() {
+    let oReq = new XMLHttpRequest();
+    oReq.addEventListener("load", reqListener);
+    oReq.open("GET", "/presets/fetch");
+    oReq.send();
+
+    function reqListener() {
+      console.log(this.responseText) ;
+      let goods = "[]";
+      if(this.responseText!="") goods=this.responseText;
+        console.log(goods) ;
+        presets = JSON.parse(goods) ;
+        buildTable();
+    };
+  }
+
+  // save the presets as it is in the table
+  function save() {
+    let array = table.getData(true);
+    console.log(array);
+    fetch('/presets/save', {
+      method: 'put',
+      body: JSON.stringify(array),
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    })
+  }
+
+  /******************
+// POP UPS
+*******************/
+
+function presetPopup() {
+  let popup = window.open('/html/presets-pop.html', 'presets',"resizable,scrollbars,status,width=640,height=700");
+}
+
+function editorPop() {
+  let popup = window.open('/html/edit-pop.html', 'presets',"resizable,scrollbars,status,width=640,height=480");
+
+}
+
+/******************
+// KEYBOARD ENTRY
+*******************/
+document.addEventListener('keyup', (event) => {
+  const keyName = event.key;
+  switch (keyName) {
+    case '=':
+      editorPop() ;
+    break;
+    default:
+  }
+});
+  </script>
+</html>

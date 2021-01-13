@@ -1,0 +1,16 @@
+/* *****************
+// 2020
+// miles.thorogood at UBC.ca
+// for the 2020 Living Things Festival
+****************** */
+
+
+#canvas{
+  background-color: black ;
+}
+
+html, body {
+    margin: 0 !important;
+    padding: 0 !important;
+    background-color: white ;
+}

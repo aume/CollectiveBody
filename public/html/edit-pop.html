@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+.slidecontainer {
+  width: 100%;
+}
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 15px;
+  border-radius: 5px;
+  background: #d3d3d3;
+  outline: none;
+  opacity: 0.7;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+
+.slider:hover {
+  opacity: 1;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+  width: 25px;
+  height: 25px;
+  border-radius: 50%;
+  background: #4CAF50;
+  cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<h2><code> Edit Pop</code></h2>
+
+<div class="slidecontainer">
+  <!-- Sliders for:
+  position x and y
+  size
+  mask x and y
+  mask w and h
+  -->
+  screen xpos
+  <input type="range" min="0" max="2000" value="50" class="slider" id="x" oninput="changeValue()">
+  screen ypos
+  <input type="range" min="0" max="2000" value="50" class="slider" id="y" oninput="changeValue()">
+
+  mask width
+  <input type="range" min="10" max="3000" value="50" class="slider" id="mw" oninput="changeValue()">
+
+  mask height
+  <input type="range" min="10" max="3000" value="50" class="slider" id="mh" oninput="changeValue()">
+
+  video width
+  <input type="range" min="100" max="3000" value="50" class="slider" id="width" oninput="changeValue()">
+  video height
+  <input type="range" min="100" max="3000" value="50" class="slider" id="height" oninput="changeValue()">
+
+  video offset x
+  <input type="range" min="-1000" max="1000" value="0" class="slider" id="vx" oninput="changeValue()">
+  video offset y
+  <input type="range" min="-1000" max="1000" value="0" class="slider" id="vy" oninput="changeValue()">
+
+  <!-- mask offset x
+  <input type="range" min="0" max="2000" value="50" class="slider" id="mx" oninput="changeValue()">
+
+  mask offset y
+  <input type="range" min="0" max="2000" value="50" class="slider" id="my" oninput="changeValue()"> -->
+
+
+
+  <!-- color gain
+  <input type="range" min="0" max="200" value="100" step="1" class="slider" id="color-gain" oninput="changeValue()">
+
+  color gamma
+  <input type="range" min="0" max="200" value="100" step="1" class="slider" id="color-gamma" oninput="changeValue()">
+
+  red gain
+  <input type="range" min="0" max="200" value="100" step="1" class="slider" id="red-gain" oninput="changeValue()">
+  green gain
+  <input type="range" min="0" max="200" value="100" step="1" class="slider" id="green-gain" oninput="changeValue()">
+  blue gain
+  <input type="range" min="0" max="200" value="100" step="1" class="slider" id="blue-gain" oninput="changeValue()">
+  process on/off
+  <input type="checkbox" id="process" name="process" value="off" onclick:"changeValue()"> -->
+</div>
+
+<script>
+   // channel gets edit values
+   const editorChannel = new BroadcastChannel('editorChannel');
+   editorChannel.onmessage = (eventMessage) => {
+    let data = JSON.parse(eventMessage.data);
+    console.log(data);
+    document.getElementById("x").value = data.x;
+    document.getElementById("y").value = data.y;
+    document.getElementById("width").value = data.width ;
+    document.getElementById("height").value = data.height ;
+    document.getElementById("vx").value = data.vOffsetX ;
+    document.getElementById("vy").value = data.vOffsetY ;
+    // document.getElementById("mx").value = data.mOffsetX ;
+    // document.getElementById("my").value = data.mOffsetY ;
+    document.getElementById("mw").value = data.mWidth ;
+    document.getElementById("mh").value = data.mHeight ;
+    // document.getElementById("color-gain").value = data.colorGain,
+    // document.getElementById("color-gamma").value = data.colorGamma ;
+    // document.getElementById("red-gain").value = data.redGain;
+    // document.getElementById("green-gain").value = data.greenGain ;
+    // document.getElementById("blue-gain").value = data.blueGain ;
+    // document.getElementById("process").checked  = data.process;
+   }
+   //
+   function changeValue() {
+     console.log("payload");
+     let payload = {
+       "x":document.getElementById("x").value ,
+       "y":document.getElementById("y").value,
+       "width":document.getElementById("width").value,
+       "height":document.getElementById("height").value,
+       "vOffsetX":document.getElementById("vx").value,
+       "vOffsetY":document.getElementById("vy").value,
+       // "mOffsetX":document.getElementById("mx").value,
+       // "mOffsetY":document.getElementById("my").value,
+       "mWidth":document.getElementById("mw").value,
+       "mHeight":document.getElementById("mh").value,
+       // "colorGain":document.getElementById("color-gain").value,
+       // "colorGamma":document.getElementById("color-gamma").value,
+       // "redGain":document.getElementById("red-gain").value,
+       // "greenGain":document.getElementById("green-gain").value,
+       // "blueGain":document.getElementById("blue-gain").value,
+       // "process":document.getElementById("process").checked
+     }
+     console.log(payload);
+     editorChannel.postMessage(payload) ;
+   }
+
+
+
+   function presetPopup() {
+     let popup = window.open('/html/presets-pop.html', 'presets',"resizable,scrollbars,status,width=640,height=700");
+   }
+
+   function editorPop() {
+     let popup = window.open('/html/edit-pop.html', 'presets',"resizable,scrollbars,status,width=640,height=480");
+
+   }
+
+   /******************
+   // KEYBOARD ENTRY
+   *******************/
+   document.addEventListener('keyup', (event) => {
+     const keyName = event.key;
+     switch (keyName) {
+       case '=':
+         presetPopup() ;
+       break;
+         default:
+     }
+  });
+
+</script>
+
+</body>
+</html>
