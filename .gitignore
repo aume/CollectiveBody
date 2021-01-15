@@ -1,8 +1,8 @@
 .DS_Store
-.wav
-.aif
-.mp3
-.mov
-.mp4
 jquery.*
-tabulator.*
+tabulator.**
+**.wav
+**.mp4
+**.mp3
+**.aif
+**.mov
