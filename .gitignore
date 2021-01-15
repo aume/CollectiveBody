@@ -1,8 +1,9 @@
 .DS_Store
-jquery.*
-tabulator.**
+jquery/
+tabulator/
 **.wav
 **.mp4
 **.mp3
 **.aif
 **.mov
+public/js/jquery.min.js
